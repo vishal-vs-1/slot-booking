@@ -24,5 +24,5 @@ public class Slot {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private String slot;
+	private String timing;
 }

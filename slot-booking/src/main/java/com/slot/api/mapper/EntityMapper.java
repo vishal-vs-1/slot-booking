@@ -14,7 +14,9 @@ public class EntityMapper {
 						 .password(d.getPassword()).build();
 	}
 	public static Booking prepareBooking(BookingDto d) {
-		return BookingDto.builder()
+		return Booking.builder()
+					  .gameName(d.getGameName())
+					  .date(d.getDate()).build();
 	}
 	
 }
