@@ -1,6 +1,7 @@
 package com.slot.api.repo;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,5 +22,9 @@ public interface GameRepository extends JpaRepository<Game, Integer>{
 	Set<LocalDate> findDistinctDateByGameName(String gameName);
 	
 	Set<Slot> findSlotsByGameNameAndDate(String gameName, LocalDate date);
+	
+	List<Game> findByDate(LocalDate date);
+	
+	void deleteAllByDate(LocalDate date);
 	
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.slot.api.dto.GetSlotsDto;
@@ -14,16 +15,21 @@ import com.slot.api.entity.Game;
 import com.slot.api.exception.DetailsAlreadyPresentException;
 import com.slot.api.exception.DetailsNotAvailableException;
 import com.slot.api.mapper.EntityMapper;
+import com.slot.api.repo.BookingRepository;
 import com.slot.api.repo.GameRepository;
 import com.slot.api.service.GameService;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class GameServiceImpl implements GameService{
 
 	private GameRepository gameRepository;
+	
+	private BookingRepository bookRepo;
 	
 	@Override
 	public Set<String> showAvailableGames(){
@@ -68,5 +74,26 @@ public class GameServiceImpl implements GameService{
 			i++;
 		}
 		list.stream().forEach(c-> gameRepository.save(c));
+	}
+
+	
+	//Scheduler to automatically update dates
+	@Scheduled(cron = "0 0 0 * * ?")
+	private void updateGameData() {
+		LocalDate pastDay = LocalDate.now().minusDays(1);
+		var gameList =  gameRepository.findByDate(pastDay);
+		if(gameList.isEmpty())
+			throw new DetailsNotAvailableException("scheduler error : past day data not present");
+		
+		gameRepository.deleteAllByDate(pastDay);
+		
+		var bookList = bookRepo.findByDate(pastDay);
+		if(bookList.isEmpty())
+			log.info("No bookings availailable for previous day");
+		bookRepo.deleteAllByDate(pastDay);
+
+		var names = gameRepository.findDistinctGameName();
+		LocalDate addDate = LocalDate.now().plusDays(4);
+		names.stream().forEach(c-> gameRepository.save(EntityMapper.prepareGame(c, addDate)));
 	}
 }
