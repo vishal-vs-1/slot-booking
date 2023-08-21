@@ -8,6 +8,6 @@ import com.slot.api.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 
-	 Boolean existByEmail(String email);
+	 boolean existsByEmail(String email);
 	 Optional<UserEntity> findByEmail(String email);
 }

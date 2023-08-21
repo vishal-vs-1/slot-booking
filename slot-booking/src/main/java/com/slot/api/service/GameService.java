@@ -12,4 +12,6 @@ public interface GameService{
 	public Set<LocalDate> showAvailableDatesForGame(String gameName);
 	
 	public Set<String> showSlotsOnGameDate(GetSlotsDto details);
+	
+	public void addGame(String game);
 }

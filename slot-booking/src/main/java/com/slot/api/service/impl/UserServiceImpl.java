@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public String bookGame(BookingDto details, String email) {
-		if(!gameRepo.ExistByGameNameAndDate(details.getGameName(), details.getDate()))
+		if(!gameRepo.existsByGameNameAndDate(details.getGameName(), details.getDate()))
 			throw new InvalidGameDetailsException("Invalid details : No such game or available date exists");
 		
 		var booking = EntityMapper.prepareBooking(details);

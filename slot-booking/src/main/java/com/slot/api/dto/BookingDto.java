@@ -1,7 +1,6 @@
 package com.slot.api.dto;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Builder;
@@ -12,12 +11,12 @@ import lombok.Setter;
 @Setter
 @Builder
 public class BookingDto {
-	
+
 	private int id;
 	
 	private String gameName;
 	
 	private LocalDate date;
 	
-	private Set<Integer> slotId = new HashSet<>();
+	private Set<Integer> slotId;
 }

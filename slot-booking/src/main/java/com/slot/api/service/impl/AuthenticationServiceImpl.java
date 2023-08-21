@@ -1,5 +1,6 @@
 package com.slot.api.service.impl;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.slot.api.dto.RegisterDto;
@@ -16,10 +17,14 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
 	private UserRepository userRepo;
 	
+	private PasswordEncoder encoder;
+	
 	@Override
 	public void registerUser(RegisterDto details) {
-		if(userRepo.existByEmail(details.getEmail()))
+		if(userRepo.existsByEmail(details.getEmail()))
 			throw new DetailsAlreadyPresentException("User is already registered with the given email");
-		userRepo.save(EntityMapper.prepareUserRegistration(details));
+		var user = EntityMapper.prepareUserRegistration(details);
+		user.setPassword(encoder.encode(details.getPassword()));
+		userRepo.save(user);
 	}
 }
