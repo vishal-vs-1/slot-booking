@@ -16,8 +16,8 @@ public class SecurityUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		var user = repo.findByEmail(username);
+		
 		return user.map(SecurityUserDetails::new)
 				   .orElseThrow(()-> new UsernameNotFoundException("User is not registered"));
 	}
-
 }
